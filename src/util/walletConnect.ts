@@ -61,7 +61,7 @@ export async function connectWallet(type) {
   return await initWallet();
 }
 
-export async function disconnectWallet() {
+export function disconnectWallet(): IWallet {
   localStorage.setItem(walletTypeCache, '');
   walletInfo.walletType = '';
   walletInfo.walletAddress = '';
@@ -91,10 +91,10 @@ export async function initWallet(): Promise<{ code: number, msg: string, wallet?
       method: 'eth_accounts',
     });
   } else {
-    networkId = await web3Provider.eth.request({
+    networkId = await (<any>web3Provider.eth).request({
       method: 'net_version ',
     });
-    walletAddress = await web3Provider.eth.request({
+    walletAddress = await (<any>web3Provider.eth).request({
       method: 'eth_accounts',
     });
   }
@@ -138,7 +138,7 @@ export async function supportWalletList() {
   const { ethereum } = window;
   if (ethereum.isMetaMask) walletList.push(METAMASK);
   if (typeof window.okxwallet !== 'undefined') walletList.push(OKXWALLET);
-  if (window.navigator.brave) walletList.push(BRAVE);
+  if ((<any>window.navigator).brave) walletList.push(BRAVE);
   return walletList;
 }
 

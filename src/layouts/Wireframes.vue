@@ -66,7 +66,7 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
     import { connectWallet, supportWalletList, disconnectWallet } from "../util/walletConnect";
     import utils from "../util/utils";
     export default {

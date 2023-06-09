@@ -147,7 +147,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
     import { walletInfo, ensureWalletNetwork } from "../util/walletConnect";
     import utils from "../util/utils";
     import { providers } from 'ethers';
@@ -211,7 +211,7 @@
                 }
             },
             async search() {
-                let params = {
+                let params: any = {
                     page: this.page,
                     limit: this.limit
                 };
