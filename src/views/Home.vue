@@ -194,7 +194,7 @@
                     "Checking": 3,
                     "Fail": 4
                 },
-                statistic: {}
+                statistic: <any>{}
             };
         },
         async mounted() {
@@ -210,6 +210,7 @@
                 this.dataList = res.data.data.list;
                 this.totalPage = Math.ceil(res.data.data.total / this.limit);
             }
+            await this.searchStatistic();
         },
         methods: {
             async clickSearch() {
@@ -220,6 +221,14 @@
                     this.showMessage(e.message, 'error');
                 } finally {
                     this.inputLoading = false;
+                }
+            },
+            async searchStatistic(){
+                const statisticRes = await axios.get('http://18.181.49.35:8105/statistic');
+                if (!statisticRes?.data?.data) {
+                    this.showMessage('Network Error', 'error');
+                } else {
+                    this.statistic = statisticRes.data.data;
                 }
             },
             async search() {
@@ -236,18 +245,13 @@
                 const res = await axios.get('http://18.181.49.35:8105/list', {
                     params
                 });
-                const statisticRes = await axios.get('http://18.181.49.35:8105/statistic');
-                if (!statisticRes?.data?.data) {
-                    this.showMessage('Network Error', 'error');
-                } else {
-                    this.statistic = statisticRes.data.data;
-                }
                 if (!res?.data?.data) {
                     this.showMessage('Network Error', 'error');
                 } else {
                     this.dataList = res.data.data.list;
                     this.showMessage('Inquiry successful', 'success');
                 }
+                await this.searchStatistic();
             },
             async sendTransfer(id, oldAddress, newAddress, ETHAmount) {
                 this.loadingMap[id] = true;
