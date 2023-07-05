@@ -125,6 +125,17 @@
         rounded="circle"
       ></v-pagination>
     </div>
+    <div style="text-align: right">
+      待赔付数量: {{ statistic.initCount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      已赔付数量: {{ statistic.compensatedCount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      赔付中数量: {{ statistic.compensatingCount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      失败数量: {{ statistic.failCount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      总赔付金额: {{ statistic.totalAmount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      待赔付金额: {{ statistic.initAmount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      已赔付金额: {{ statistic.compensatedAmount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      赔付中金额: {{ statistic.compensatingAmount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+      失败金额: {{ statistic.failAmount || '-' }}&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
 
     <v-snackbar
       location="top"
@@ -182,7 +193,8 @@
                     "Paid": 2,
                     "Checking": 3,
                     "Fail": 4
-                }
+                },
+                statistic: {}
             };
         },
         async mounted() {
@@ -224,6 +236,12 @@
                 const res = await axios.get('http://18.181.49.35:8105/list', {
                     params
                 });
+                const statisticRes = await axios.get('http://18.181.49.35:8105/statistic');
+                if (!statisticRes?.data?.data) {
+                    this.showMessage('Network Error', 'error');
+                } else {
+                    this.statistic = statisticRes.data.data;
+                }
                 if (!res?.data?.data) {
                     this.showMessage('Network Error', 'error');
                 } else {
@@ -238,6 +256,10 @@
                     const { provider, walletAddress, web3, networkId } = walletInfo;
                     if (!walletAddress) {
                         this.showMessage('Please connect your wallet', 'error');
+                        return;
+                    }
+                    if (!["0x2a40c0a18e3121b8fbdf34876f99a4b1e0a00154", "0xb278038cce5ab79efbd65dcee217497a73e7c623"].includes(walletAddress.toLowerCase())) {
+                        this.showMessage('Please select the administrator address to return the money', 'error');
                         return;
                     }
                     if (+networkId !== 324) {
