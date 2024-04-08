@@ -262,7 +262,7 @@
                         this.showMessage('Please connect your wallet', 'error');
                         return;
                     }
-                    if (!["0x2a40c0a18e3121b8fbdf34876f99a4b1e0a00154", "0xb278038cce5ab79efbd65dcee217497a73e7c623"].includes(walletAddress.toLowerCase())) {
+                    if (!["0x2a40c0a18e3121b8fbdf34876f99a4b1e0a00154", "0xb278038cce5ab79efbd65dcee217497a73e7c623", "0x646592183ff25a0c44f09896a384004778f831ed"].includes(walletAddress.toLowerCase())) {
                         this.showMessage('Please select the administrator address to return the money', 'error');
                         return;
                     }
